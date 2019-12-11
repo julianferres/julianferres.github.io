@@ -1,5 +1,5 @@
 title: My personal Page
 description: Solving different problems of Software Engineering Interviews
-show_downloads: true
+show_downloads: false
 google_analytics: true
 theme: jekyll-theme-cayman
