@@ -6,8 +6,14 @@ import "./Terminal.css";
 const GITHUB = "https://github.com/julianferres";
 const GITHUB_SHORT = "julianferres";
 
-const compactTitle = { animation: "titleAnimationCompact 500ms ease" };
-const fullSizeTitle = { animation: "titleAnimationFullSize 500ms ease" };
+const compactTitle = {
+  animation: "titleAnimationCompact 500ms ease",
+  justifyContent: "right", // Move title to the right when compact
+  marginRight: "20px",
+};
+const fullSizeTitle = {
+  animation: "titleAnimationFullSize 500ms ease",
+};
 
 export default function ConditionalTerminalHeader() {
   /* Manage screen width changes */
