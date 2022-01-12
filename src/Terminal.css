@@ -1,0 +1,81 @@
+:root {
+  --font-family: "Fira Code", monospace;
+}
+
+.terminal {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 75%;
+  box-shadow: rgb(0 0 0 / 55%) 0px 5px 20px;
+  background-color: black;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  flex-direction: row;
+  width: 100%;
+  height: 30px;
+  background-color: #3c3d3f;
+  align-items: center;
+}
+
+.buttons {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  margin-left: 8px;
+}
+
+.title {
+  flex: 1;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  color: rgb(238, 238, 238);
+}
+
+.title-href {
+  /* remove all link styles */
+  text-decoration: none;
+  color: inherit;
+  margin-left: 10px;
+}
+
+h1 {
+  font-size: 14px;
+  font-family: "Fira Code", monospace;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+p {
+  font-size: 14px;
+  font-family: "Fira Code", monospace;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.terminal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+}
+
+.command {
+  background-color: transparent;
+  border-width: 0px;
+  border: none;
+  color: white;
+  font-family: var(--font-family);
+  margin-top: 10px;
+}
+.command:focus {
+  outline: none;
+}
