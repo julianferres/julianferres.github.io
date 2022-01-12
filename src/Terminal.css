@@ -2,6 +2,20 @@
   --font-family: "Fira Code", monospace;
 }
 
+h1 {
+  font-size: 14px;
+  font-family: "Fira Code", monospace;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+p {
+  font-size: 14px;
+  font-family: "Fira Code", monospace;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 .terminal {
   display: flex;
   flex-direction: column;
@@ -45,20 +59,6 @@
   margin-left: 10px;
 }
 
-h1 {
-  font-size: 14px;
-  font-family: "Fira Code", monospace;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-p {
-  font-size: 14px;
-  font-family: "Fira Code", monospace;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
 .terminal-body {
   display: flex;
   flex-direction: column;
@@ -79,3 +79,27 @@ p {
 .command:focus {
   outline: none;
 }
+
+/* Title animation */
+@keyframes titleAnimationCompact {
+  0% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+@keyframes titleAnimationFullSize {
+  0% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* end Title animation */
