@@ -1,5 +1,6 @@
 :root {
   --font-family: "Fira Code", monospace;
+  --margin-top-cli: 10px;
 }
 
 h1 {
@@ -44,12 +45,20 @@ p {
   margin-left: 8px;
 }
 
+.button:hover {
+  opacity: 0.5;
+}
+
 .title {
   flex: 1;
   display: flex;
   text-align: center;
   justify-content: center;
   color: rgb(238, 238, 238);
+}
+
+.title:hover {
+  opacity: 0.6;
 }
 
 .title-href {
@@ -66,19 +75,50 @@ p {
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px;
+  min-height: 500px;
 }
 
-.command {
+/* Prompt and text input */
+.input-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.command-input {
   background-color: transparent;
   border-width: 0px;
   border: none;
   color: white;
   font-family: var(--font-family);
-  margin-top: 10px;
+  margin-top: var(--margin-top-cli);
+  caret-color: green;
+  width: 100%;
 }
-.command:focus {
+.command-input:focus {
   outline: none;
 }
+
+.prompt {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.arrow {
+  font-size: 0.8em;
+  color: green;
+  margin-top: var(--margin-top-cli);
+}
+
+.directory {
+  color: cyan;
+  font-size: 16px;
+  font-family: var(--font-family);
+  margin-top: var(--margin-top-cli);
+}
+
+/* End of Prompt and text input */
 
 /* Title animation */
 @keyframes titleAnimationCompact {

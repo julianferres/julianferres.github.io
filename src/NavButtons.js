@@ -15,6 +15,7 @@ export default function NavButtons(props) {
           fill="#FF5F56"
           stroke="#E0443E"
           strokeWidth=".5"
+          className="button"
         ></circle>
         <circle
           cx="26"
@@ -23,6 +24,7 @@ export default function NavButtons(props) {
           fill="#FFBD2E"
           stroke="#DEA123"
           strokeWidth=".5"
+          className="button"
         ></circle>
         <circle
           cx="46"
@@ -31,6 +33,7 @@ export default function NavButtons(props) {
           fill="#27C93F"
           stroke="#1AAB29"
           strokeWidth=".5"
+          className="button"
         ></circle>
       </g>
     </svg>
