@@ -121,6 +121,11 @@ p {
   margin-top: var(--margin-top-cli);
 }
 
+.past-commands {
+  padding: 0;
+  margin: 0;
+}
+
 /* End of Prompt and text input */
 
 /* Title animation */

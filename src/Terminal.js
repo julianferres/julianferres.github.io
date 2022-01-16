@@ -10,11 +10,21 @@ export default function Terminal() {
   const [currentCommand, setCurrentCommand] = useState("");
   const terminalInputRef = useRef();
 
+  const executeCommand = (command) => {
+    if (command === "clear") {
+      setPastCommands([]);
+      setCurrentCommand("");
+    } else if (command === "help") {
+      setPastCommands([...pastCommands, command]);
+      setCurrentCommand("");
+    }
+  };
+
   const onSubmitCommand = (e) => {
     e.preventDefault();
 
     setTimeout(function () {
-      setPastCommands([...pastCommands, currentCommand]);
+      executeCommand(currentCommand);
       setCurrentCommand("");
       e.target.reset();
     }, 150); // Simulate console delay
@@ -30,14 +40,7 @@ export default function Terminal() {
     <div className="terminal">
       <ConditionalTerminalHeader />
       <div className="terminal-body">
-        <p>Welcome to Julian Ferres' webpage</p>
-        <Delayed waitBeforeShow={800}>
-          <p>Second Welcome to Julian Ferres' webpage</p>
-        </Delayed>
-        <Delayed waitBeforeShow={1800}>
-          <p>Third Welcome to Julian Ferres' webpage </p>
-        </Delayed>
-        <Delayed waitBeforeShow={2000}>
+        <Delayed waitBeforeShow={1000}>
           <CommandList pastCommands={pastCommands} />
           <div className="input-container">
             <Prompt />
