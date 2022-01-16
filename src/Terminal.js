@@ -40,21 +40,16 @@ export default function Terminal() {
     <div className="terminal">
       <ConditionalTerminalHeader />
       <div className="terminal-body">
-        <Delayed waitBeforeShow={1000}>
+        <Delayed waitBeforeShow={500}>
           <CommandList pastCommands={pastCommands} />
-          <div className="input-container">
-            <Prompt />
-            <form onSubmit={onSubmitCommand}>
-              <input
-                ref={terminalInputRef}
-                type="text"
-                className="command-input"
-                autoFocus={true}
-                onChange={(e) => setCurrentCommand(e.target.value)}
-                onBlur={({ target }) => target.focus()}
-              />
-            </form>
-          </div>
+          <Prompt
+            id={"input"}
+            onSubmitCommand={onSubmitCommand}
+            terminalInputRef={terminalInputRef}
+            currentCommand={currentCommand}
+            setCurrentCommand={setCurrentCommand}
+            disabled={false}
+          />
         </Delayed>
       </div>
     </div>
