@@ -6,7 +6,7 @@ import Delayed from "./utils/Delayed";
 import CommandList from "./CommandList";
 
 export default function Terminal() {
-  const [pastCommands, setPastCommands] = useState([]);
+  const [pastCommands, setPastCommands] = useState(["help"]);
   const [currentCommand, setCurrentCommand] = useState("");
   const terminalInputRef = useRef();
 
@@ -43,6 +43,8 @@ export default function Terminal() {
       <div className="terminal-body">
         <Delayed waitBeforeShow={500}>
           <CommandList pastCommands={pastCommands} />
+        </Delayed>
+        <Delayed waitBeforeShow={1000}>
           <Prompt
             currentCommand={currentCommand}
             disabled={false}

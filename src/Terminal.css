@@ -139,7 +139,6 @@ p {
 }
 
 .paragraph-href {
-  /* remove all link styles */
   text-decoration: none;
   color: var(--cyan);
   transition: 250ms linear;
@@ -148,6 +147,25 @@ p {
 .paragraph-href:hover {
   opacity: 0.7;
   text-decoration: underline;
+}
+
+.contact-p {
+  display: flex;
+  transition: 250ms linear;
+  padding: 4px 0;
+}
+.contact-p:hover {
+  opacity: 0.7;
+}
+
+.contact-href {
+  text-decoration: none;
+  color: var(--chalk);
+}
+
+.help-title {
+  color: var(--cyan);
+  font-style: italic;
 }
 
 /* End of Prompt and text input */

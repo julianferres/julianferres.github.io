@@ -1,5 +1,5 @@
 import React from "react";
-import { FaGithubSquare } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import NavButtons from "./NavButtons";
 import "./Terminal.css";
 
@@ -35,7 +35,7 @@ export default function ConditionalTerminalHeader() {
     <div className="terminal-header">
       <NavButtons className="buttons" />
       <h1 className="title" style={compact ? compactTitle : fullSizeTitle}>
-        <FaGithubSquare style={{ fontSize: "14px", fontWeight: 400 }} />
+        <FaGithub style={{ fontSize: "14px", fontWeight: 400 }} />
         <a
           className="title-href"
           href={GITHUB}

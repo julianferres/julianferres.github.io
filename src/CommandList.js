@@ -1,6 +1,23 @@
 import Prompt from "./Prompt";
+import { FaGithub, FaLinkedin, FaCode, FaEnvelope } from "react-icons/fa";
+import { getOutputColor } from "./utils/getColorCommand";
 
-const valid_commands = ["about", "clear", "help"];
+const iconStyle = {
+  fontSize: "14px",
+  fontWeight: 400,
+  color: "rgb(235, 235, 235)",
+};
+
+const contactInfo = {
+  github: "https://github.com/julianferres",
+  linkedin: "https://www.linkedin.com/in/julianferres/",
+  codeforces: "https://codeforces.com/profile/julianferres",
+  email: "julianferres@gmail.com",
+};
+
+const HelpTitle = (props) => {
+  return <span className="help-title">{props.children}</span>;
+};
 
 const getCommandBody = (command) => {
   if (command === "about") {
@@ -23,7 +40,7 @@ const getCommandBody = (command) => {
             target="_blank"
             rel="noreferrer"
             className="paragraph-href"
-            href="https://codeforces.com/profile/julianferres"
+            href={contactInfo.codeforces}
           >
             Competitive programming
           </a>
@@ -31,15 +48,95 @@ const getCommandBody = (command) => {
       </>
     );
   }
+  if (command === "contact") {
+    return (
+      <>
+        <p className="contact-p">
+          <FaGithub style={{ iconStyle }} />
+          &nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="contact-href"
+            href={contactInfo.github}
+          >
+            {contactInfo.github}
+          </a>
+        </p>
+        <p className="contact-p">
+          <FaLinkedin style={{ iconStyle }} />
+          &nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="contact-href"
+            href={contactInfo.linkedin}
+          >
+            {contactInfo.linkedin}
+          </a>
+        </p>
+        <p className="contact-p">
+          <FaCode style={{ iconStyle }} />
+          &nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="contact-href"
+            href="https://codeforces.com/profile/julianferres/"
+          >
+            {contactInfo.codeforces}
+          </a>
+        </p>
+        <p className="contact-p">
+          <FaEnvelope style={{ iconStyle }} />
+          &nbsp;
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="contact-href"
+            href="mailto:julianferres@gmail.com"
+          >
+            julianferres@gmail.com
+          </a>
+        </p>
+      </>
+    );
+  }
   if (command === "help") {
-    return "help";
+    return (
+      <>
+        <p>
+          Available commands:
+          <br /> <br />
+          <HelpTitle>about</HelpTitle>
+          <br />
+          &nbsp;- Brief description of myself.
+          <br />
+          <br />
+        </p>
+        <p>
+          <HelpTitle>contact</HelpTitle>
+          <br />
+          &nbsp;- My contact information.
+          <br />
+          <br />
+        </p>
+        <p>
+          <HelpTitle>clear</HelpTitle>
+          <br />
+          &nbsp;- clears the terminal.
+          <br />
+          <br />
+        </p>
+        <p>
+          <HelpTitle>help</HelpTitle>
+          <br />
+          &nbsp;- Brings up this help menu.
+        </p>
+      </>
+    );
   }
   return <p>comand not found:&nbsp;{command}</p>;
-};
-
-const getOutputColor = (command) => {
-  // get the value from commandMap or "wrong command" if not found
-  return valid_commands.includes(command) ? "rgb(238, 238, 238)" : "#ff5b5b";
 };
 
 const getCommandOutput = (command, index) => {
