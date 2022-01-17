@@ -1,6 +1,9 @@
 :root {
   --font-family: "Fira Code", monospace;
   --margin-top-cli: 10px;
+  --green: #15e45d;
+  --chalk: rgb(235, 235, 235);
+  --cyan: rgb(0, 247, 255);
 }
 
 h1 {
@@ -18,15 +21,15 @@ p {
 }
 
 .terminal {
+  background-color: black;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-shadow: rgb(0 0 0 / 55%) 0px 5px 20px;
   display: flex;
   flex-direction: column;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 75%;
-  box-shadow: rgb(0 0 0 / 55%) 0px 5px 20px;
-  background-color: black;
-  max-width: 800px;
   height: 400px;
+  max-width: 800px;
+  width: 75%;
 }
 
 .terminal-header {
@@ -56,7 +59,7 @@ p {
   display: flex;
   text-align: center;
   justify-content: center;
-  color: rgb(238, 238, 238);
+  color: var(--chalk);
 }
 
 .title:hover {
@@ -92,10 +95,9 @@ p {
   background-color: transparent;
   border-width: 0px;
   border: none;
-  color: white;
   font-family: var(--font-family);
   margin-top: var(--margin-top-cli);
-  caret-color: green;
+  caret-color: var(--green);
   width: 100%;
 }
 .command-input:focus {
@@ -110,12 +112,12 @@ p {
 
 .arrow {
   font-size: 0.8em;
-  color: green;
+  color: var(--green);
   margin-top: var(--margin-top-cli);
 }
 
 .directory {
-  color: cyan;
+  color: var(--cyan);
   font-size: 16px;
   font-family: var(--font-family);
   margin-top: var(--margin-top-cli);
@@ -124,6 +126,7 @@ p {
 .past-commands {
   padding: 0;
   margin: 0;
+  font-size: 14px;
 }
 
 /* End of Prompt and text input */
@@ -149,7 +152,6 @@ p {
     visibility: visible;
   }
 }
-
 /* end Title animation */
 
 /* Hide scroll whell */
@@ -157,3 +159,4 @@ p {
   width: 0px;
   background: transparent;
 }
+/* end Hide scroll whell */

@@ -10,16 +10,17 @@ export default function Prompt(props) {
       </div>
       <form onSubmit={props.onSubmitCommand}>
         <input
+          autoFocus={true}
+          className="command-input"
+          disabled={props.disabled}
           key={props.id}
+          onBlur={({ target }) => target.focus()}
+          onChange={(e) => props.setCurrentCommand(e.target.value)}
           ref={props.terminalInputRef}
+          spellCheck={false}
           style={{ color: getColourCommand(props.currentCommand) }}
           type="text"
-          className="command-input"
-          autoFocus={true}
           value={props.currentCommand}
-          disabled={props.disabled}
-          onChange={(e) => props.setCurrentCommand(e.target.value)}
-          onBlur={({ target }) => target.focus()}
         />
       </form>
     </div>

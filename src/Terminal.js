@@ -12,12 +12,13 @@ export default function Terminal() {
 
   const executeCommand = (command) => {
     if (command === "clear") {
+      // clear the terminal
       setPastCommands([]);
       setCurrentCommand("");
-    } else if (command === "help") {
-      setPastCommands([...pastCommands, command]);
-      setCurrentCommand("");
+      return;
     }
+    setPastCommands([...pastCommands, command]);
+    setCurrentCommand("");
   };
 
   const onSubmitCommand = (e) => {
@@ -43,12 +44,12 @@ export default function Terminal() {
         <Delayed waitBeforeShow={500}>
           <CommandList pastCommands={pastCommands} />
           <Prompt
+            currentCommand={currentCommand}
+            disabled={false}
             id={"input"}
             onSubmitCommand={onSubmitCommand}
-            terminalInputRef={terminalInputRef}
-            currentCommand={currentCommand}
             setCurrentCommand={setCurrentCommand}
-            disabled={false}
+            terminalInputRef={terminalInputRef}
           />
         </Delayed>
       </div>
