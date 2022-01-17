@@ -8,7 +8,7 @@ export default function Prompt(props) {
         <p className="arrow">➜</p>
         <p className="directory">&nbsp;~&nbsp;</p>
       </div>
-      <form onSubmit={props.onSubmitCommand}>
+      <form onSubmit={props.onSubmitCommand} style={{ flex: 1 }}>
         <input
           autoFocus={true}
           className="command-input"

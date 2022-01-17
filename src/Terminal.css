@@ -86,8 +86,7 @@ p {
   flex-direction: column;
   flex: 1;
   height: calc(100% - 30px);
-  overflow: scroll;
-  /* 10px of padding left and right, 0 px of bottom and top */
+  overflow-y: scroll;
   padding: 2px 10px;
 }
 
@@ -137,6 +136,7 @@ p {
   padding: 0;
   margin: 0;
   font-size: var(--font-size);
+  word-wrap: break-word;
 }
 
 .paragraph-href {
