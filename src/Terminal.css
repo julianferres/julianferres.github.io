@@ -1,6 +1,6 @@
 :root {
   --font-family: "Fira Code", monospace;
-  --font-size: 12px;
+  --font-size: 16px;
   --font-weight: 550;
   --margin-top-cli: 8px;
 
@@ -32,7 +32,8 @@ p {
   box-shadow: rgb(0 0 0 / 55%) 0px 5px 20px;
   display: flex;
   flex-direction: column;
-  height: 400px;
+  /* height: 550px; */
+  height: 85vh;
   max-width: 800px;
   width: 75%;
 }
@@ -45,7 +46,7 @@ p {
   border-top-right-radius: 4px;
   display: flex;
   flex-direction: row;
-  height: 30px;
+  height: 40px;
   text-align: center;
   width: 100%;
 }

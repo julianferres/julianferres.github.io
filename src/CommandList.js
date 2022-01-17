@@ -13,7 +13,7 @@ const contactInfo = {
   linkedin: "https://www.linkedin.com/in/julianferres/",
   codeforces: "https://codeforces.com/profile/julianferres",
   email: "julianferres@gmail.com",
-  resume: "public/julianferres_resume.pdf",
+  resume: "./julianferres_resume.pdf",
 };
 
 const HelpTitle = (props) => {
@@ -153,6 +153,8 @@ const getCommandBody = (command) => {
           <HelpTitle>help</HelpTitle>
           <br />
           &nbsp;- Brings up this help menu.
+          <br />
+          <br />
         </p>
       </>
     );
