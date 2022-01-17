@@ -3,7 +3,6 @@ const validCommands = ["about", "clear", "help"];
 const colors = {
   green: "#15e45d",
   chalk: "rgb(235, 235, 235)",
-  // bright and radiant red
   red: "#ff5b5b",
 };
 

@@ -36,7 +36,12 @@ export default function ConditionalTerminalHeader() {
       <NavButtons className="buttons" />
       <h1 className="title" style={compact ? compactTitle : fullSizeTitle}>
         <FaGithubSquare style={{ fontSize: "14px", fontWeight: 400 }} />
-        <a className="title-href" href={GITHUB}>
+        <a
+          className="title-href"
+          href={GITHUB}
+          target="_blank"
+          rel="noreferrer"
+        >
           {compact ? GITHUB_SHORT : GITHUB}
         </a>
       </h1>
