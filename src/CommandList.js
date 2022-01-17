@@ -25,8 +25,8 @@ const getCommandBody = (command) => {
     return (
       <>
         <p>
-          Hi! I'm Julian, a Software Engineer and incoming Full-time Employee at
-          Facebook, London.
+          Hey! Julian here, a Software Engineer and incoming Full-time Employee
+          at Facebook, London.
           <br />
           <br />
         </p>
