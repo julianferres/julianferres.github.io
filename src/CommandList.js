@@ -13,6 +13,7 @@ const contactInfo = {
   linkedin: "https://www.linkedin.com/in/julianferres/",
   codeforces: "https://codeforces.com/profile/julianferres",
   email: "julianferres@gmail.com",
+  resume: "public/julianferres_resume.pdf",
 };
 
 const HelpTitle = (props) => {
@@ -44,6 +45,26 @@ const getCommandBody = (command) => {
           >
             Competitive programming
           </a>
+          <br /> <br />
+          Please check out my{" "}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="paragraph-href"
+            href={contactInfo.resume}
+          >
+            resume
+          </a>{" "}
+          and{" "}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            className="paragraph-href"
+            href={contactInfo.github}
+          >
+            Github profile
+          </a>{" "}
+          for more information.
         </p>
       </>
     );
