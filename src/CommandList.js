@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Prompt from "./Prompt";
 import { FaGithub, FaLinkedin, FaCode, FaEnvelope } from "react-icons/fa";
 import { getOutputColor } from "./utils/getColorCommand";
@@ -10,8 +11,11 @@ const iconStyle = {
 
 const contactInfo = {
   github: "https://github.com/julianferres",
+  shortGithub: "Github profile",
   linkedin: "https://www.linkedin.com/in/julianferres/",
+  shortLinkedin: "Linkedin profile",
   codeforces: "https://codeforces.com/profile/julianferres",
+  shortCodeforces: "Codeforces profile",
   email: "julianferres@gmail.com",
   resume: "./julianferres_resume.pdf",
 };
@@ -20,7 +24,7 @@ const HelpTitle = (props) => {
   return <span className="help-title">{props.children}</span>;
 };
 
-const getCommandBody = (command) => {
+const getCommandBody = (command, compact) => {
   if (command === "about") {
     return (
       <>
@@ -81,7 +85,7 @@ const getCommandBody = (command) => {
             className="contact-href"
             href={contactInfo.github}
           >
-            {contactInfo.github}
+            {compact ? contactInfo.shortGithub : contactInfo.github}
           </a>
         </p>
         <p className="contact-p">
@@ -93,7 +97,7 @@ const getCommandBody = (command) => {
             className="contact-href"
             href={contactInfo.linkedin}
           >
-            {contactInfo.linkedin}
+            {compact ? contactInfo.shortLinkedin : contactInfo.linkedin}
           </a>
         </p>
         <p className="contact-p">
@@ -105,7 +109,7 @@ const getCommandBody = (command) => {
             className="contact-href"
             href="https://codeforces.com/profile/julianferres/"
           >
-            {contactInfo.codeforces}
+            {compact ? contactInfo.shortCodeforces : contactInfo.codeforces}
           </a>
         </p>
         <p className="contact-p">
@@ -127,7 +131,7 @@ const getCommandBody = (command) => {
     return (
       <>
         <p>
-          Available commands:
+          Welcome! The available commands are:
           <br /> <br />
           <HelpTitle>about</HelpTitle>
           <br />
@@ -162,8 +166,8 @@ const getCommandBody = (command) => {
   return <p>comand not found:&nbsp;{command}</p>;
 };
 
-const getCommandOutput = (command, index) => {
-  const commandBody = getCommandBody(command);
+const getCommandOutput = (command, compact, index) => {
+  const commandBody = getCommandBody(command, compact);
 
   return (
     <div key={index}>
@@ -176,10 +180,25 @@ const getCommandOutput = (command, index) => {
 };
 
 export default function CommandList(props) {
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 700;
+
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    // subscribe to window resize event "onComponentDidMount"
+    window.addEventListener("resize", handleResizeWindow);
+    return () => {
+      // unsubscribe "onComponentDestroy"
+      window.removeEventListener("resize", handleResizeWindow);
+    };
+  }, []);
+
+  const compact = width < breakpoint;
+
   return (
     <ul className="past-commands">
       {props.pastCommands.map((command, index) =>
-        getCommandOutput(command, index)
+        getCommandOutput(command, compact, index)
       )}
     </ul>
   );

@@ -35,7 +35,7 @@ export default function ConditionalTerminalHeader() {
     <div className="terminal-header">
       <NavButtons className="buttons" />
       <h1 className="title" style={compact ? compactTitle : fullSizeTitle}>
-        <FaGithub style={{ fontSize: "14px", fontWeight: 400 }} />
+        <FaGithub style={{ fontSize: "16px", fontWeight: 400 }} />
         <a
           className="title-href"
           href={GITHUB}
