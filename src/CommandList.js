@@ -29,8 +29,7 @@ const getCommandBody = (command, compact) => {
     return (
       <>
         <p>
-          Hey! Julian here, a Software Engineer and incoming Full-time Employee
-          at Facebook, London.
+          Hey! Julian here, a Software Engineer and ex-Facebook Intern at London.
           <br />
           <br />
         </p>
@@ -48,7 +47,7 @@ const getCommandBody = (command, compact) => {
             href={contactInfo.codeforces}
           >
             Competitive programming
-          </a>
+          </a>.
           <br /> <br />
           Please check out my{" "}
           <a
@@ -163,7 +162,7 @@ const getCommandBody = (command, compact) => {
       </>
     );
   }
-  return <p>comand not found:&nbsp;{command}</p>;
+  return <p>command not found:&nbsp;{command}</p>;
 };
 
 const getCommandOutput = (command, compact, index) => {
