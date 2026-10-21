@@ -10,8 +10,8 @@ categories: jekyll update
 
 Strava activity
 
-![Strava activity](../_assets/images/image-1.png)
+![Strava activity](/_assets/images/image-1.png)
 
 
-![Chip time](../_assets/images/image.png)
+![Chip time](/_assets/images/image.png)
 
