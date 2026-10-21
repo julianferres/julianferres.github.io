@@ -8,12 +8,10 @@ categories: jekyll update
 
 [Training block speadsheet](https://docs.google.com/spreadsheets/d/1JSxb_XMJePVoMI2ADiwpThdkNaxDH_D38KdxWWyZA9c/edit?gid=1012823923#gid=1012823923)
 
-Strava activity:
+Strava activity
 
-![alt text](image-1.png)
+![Strava activity](../_assets/images/image-1.png)
 
 
-Chip time:
-
-![Amsterdam marathon result](image.png)
+![Chip time](../_assets/images/image.png)
 
