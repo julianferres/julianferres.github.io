@@ -24,6 +24,8 @@ staticDir:
 params:
   author: Julian Ferres
   description: Julian's running training and race notes.
+  assets:
+    favicon: /favicon.png
   defaultTheme: auto
   homeInfoParams:
     Title: Running blog
