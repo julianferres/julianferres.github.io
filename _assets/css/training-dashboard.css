@@ -1,8 +1,18 @@
 .training-dashboard {
-  --training-accent: #d96832;
   --training-muted: var(--secondary, #777);
   --training-border: var(--border, #ddd);
   margin: 2rem 0;
+}
+
+.training-dashboard {
+  --phase-base: #167d8d;
+  --phase-interval: #8055a5;
+  --phase-race: #d96832;
+  --phase-taper: #49865b;
+  --phase-base-tint: color-mix(in srgb, var(--phase-base) 11%, transparent);
+  --phase-interval-tint: color-mix(in srgb, var(--phase-interval) 11%, transparent);
+  --phase-race-tint: color-mix(in srgb, var(--phase-race) 11%, transparent);
+  --phase-taper-tint: color-mix(in srgb, var(--phase-taper) 11%, transparent);
 }
 
 .training-summary {
@@ -44,6 +54,166 @@
 .training-weeks {
   display: grid;
   gap: 0.75rem;
+}
+
+.training-chart-scroll {
+  overflow-x: auto;
+  margin: 1rem 0 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.training-chart {
+  display: block;
+  width: 100%;
+  min-width: 44rem;
+  height: auto;
+  overflow: visible;
+}
+
+.training-chart-grid {
+  stroke: var(--training-border);
+  stroke-dasharray: 3 4;
+}
+
+.training-chart-axis,
+.training-chart-week,
+.training-chart-phase {
+  fill: var(--training-muted);
+  font-family: inherit;
+}
+
+.training-chart-axis,
+.training-chart-week {
+  font-size: 11px;
+}
+
+.training-chart-week {
+  text-anchor: middle;
+}
+
+.training-chart-phase {
+  text-anchor: middle;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.training-chart-phase-band.phase-sub-threshold-base {
+  fill: var(--phase-base-tint);
+}
+
+.training-chart-phase-band.phase-interval-increase {
+  fill: var(--phase-interval-tint);
+}
+
+.training-chart-phase-band.phase-race-specific {
+  fill: var(--phase-race-tint);
+}
+
+.training-chart-phase-band.phase-taper {
+  fill: var(--phase-taper-tint);
+}
+
+.training-chart-planned {
+  fill: var(--training-muted);
+  opacity: 0.55;
+}
+
+.training-chart-actual.phase-sub-threshold-base,
+.training-phase.phase-sub-threshold-base,
+.training-phase-key.phase-sub-threshold-base::before,
+.training-calendar-week.phase-sub-threshold-base,
+.training-day.phase-sub-threshold-base {
+  --phase-color: var(--phase-base);
+}
+
+.training-chart-actual.phase-interval-increase,
+.training-phase.phase-interval-increase,
+.training-phase-key.phase-interval-increase::before,
+.training-calendar-week.phase-interval-increase,
+.training-day.phase-interval-increase {
+  --phase-color: var(--phase-interval);
+}
+
+.training-chart-actual.phase-race-specific,
+.training-phase.phase-race-specific,
+.training-phase-key.phase-race-specific::before,
+.training-calendar-week.phase-race-specific,
+.training-day.phase-race-specific {
+  --phase-color: var(--phase-race);
+}
+
+.training-chart-actual.phase-taper,
+.training-phase.phase-taper,
+.training-phase-key.phase-taper::before,
+.training-calendar-week.phase-taper,
+.training-day.phase-taper {
+  --phase-color: var(--phase-taper);
+}
+
+.training-chart-actual {
+  fill: var(--phase-color);
+}
+
+.training-phase-legend,
+.training-phase-keys,
+.training-series-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.training-phase-legend {
+  justify-content: space-between;
+  margin: 0.75rem 0 1.5rem;
+}
+
+.training-phase-keys,
+.training-series-legend {
+  gap: 0.45rem 0.85rem;
+}
+
+.training-phase-key,
+.training-series-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--training-muted);
+  font-size: 0.8rem;
+}
+
+.training-phase-key::before,
+.training-series-swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 0.2rem;
+  background: var(--phase-color);
+  content: "";
+}
+
+.training-series-swatch.planned {
+  background: var(--training-muted);
+  opacity: 0.55;
+}
+
+.training-series-swatch.actual {
+  background: linear-gradient(90deg, var(--phase-base), var(--phase-interval), var(--phase-race), var(--phase-taper));
+}
+
+.training-week.phase-sub-threshold-base {
+  border-inline-start: 4px solid var(--phase-base);
+}
+
+.training-week.phase-interval-increase {
+  border-inline-start: 4px solid var(--phase-interval);
+}
+
+.training-week.phase-race-specific {
+  border-inline-start: 4px solid var(--phase-race);
+}
+
+.training-week.phase-taper {
+  border-inline-start: 4px solid var(--phase-taper);
 }
 
 .training-week {
@@ -100,7 +270,7 @@
 }
 
 .training-track-actual span {
-  background: var(--training-accent);
+  background: var(--phase-color);
 }
 
 .training-calendar-scroll {
@@ -139,6 +309,11 @@
   font-weight: 600;
 }
 
+.training-calendar-week {
+  border-color: color-mix(in srgb, var(--phase-color) 45%, var(--training-border));
+  background: color-mix(in srgb, var(--phase-color) 12%, var(--entry, transparent));
+}
+
 .training-day {
   display: flex;
   flex-direction: column;
@@ -148,8 +323,8 @@
 }
 
 .training-day.has-activity {
-  border-color: color-mix(in srgb, var(--training-accent) 45%, var(--training-border));
-  background: color-mix(in srgb, var(--training-accent) 12%, var(--entry, transparent));
+  border-color: color-mix(in srgb, var(--phase-color, var(--phase-base)) 45%, var(--training-border));
+  background: color-mix(in srgb, var(--phase-color, var(--phase-base)) 12%, var(--entry, transparent));
 }
 
 .training-day.no-data {
@@ -164,7 +339,7 @@
 .training-phase {
   display: inline-block;
   margin-left: 0.35rem;
-  color: var(--training-accent);
+  color: var(--phase-color);
   font-size: 0.8rem;
   font-weight: 500;
 }
