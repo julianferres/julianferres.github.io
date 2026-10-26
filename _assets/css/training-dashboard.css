@@ -112,8 +112,7 @@
 .training-phase.phase-sub-threshold-base,
 .training-phase-key.phase-sub-threshold-base::before,
 .training-calendar-week.phase-sub-threshold-base,
-.training-day.phase-sub-threshold-base,
-.training-route-card.phase-sub-threshold-base {
+.training-day.phase-sub-threshold-base {
   --phase-color: var(--phase-base);
 }
 
@@ -121,8 +120,7 @@
 .training-phase.phase-interval-increase,
 .training-phase-key.phase-interval-increase::before,
 .training-calendar-week.phase-interval-increase,
-.training-day.phase-interval-increase,
-.training-route-card.phase-interval-increase {
+.training-day.phase-interval-increase {
   --phase-color: var(--phase-interval);
 }
 
@@ -130,8 +128,7 @@
 .training-phase.phase-race-specific,
 .training-phase-key.phase-race-specific::before,
 .training-calendar-week.phase-race-specific,
-.training-day.phase-race-specific,
-.training-route-card.phase-race-specific {
+.training-day.phase-race-specific {
   --phase-color: var(--phase-race);
 }
 
@@ -139,8 +136,7 @@
 .training-phase.phase-taper,
 .training-phase-key.phase-taper::before,
 .training-calendar-week.phase-taper,
-.training-day.phase-taper,
-.training-route-card.phase-taper {
+.training-day.phase-taper {
   --phase-color: var(--phase-taper);
 }
 
@@ -178,66 +174,6 @@
   border-radius: 0.2rem;
   background: var(--phase-color);
   content: "";
-}
-
-.training-route-card.phase-sub-threshold-base {
-  border-inline-start: 4px solid var(--phase-base);
-}
-
-.training-route-card.phase-interval-increase {
-  border-inline-start: 4px solid var(--phase-interval);
-}
-
-.training-route-card.phase-race-specific {
-  border-inline-start: 4px solid var(--phase-race);
-}
-
-.training-route-card.phase-taper {
-  border-inline-start: 4px solid var(--phase-taper);
-}
-
-.training-route-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr));
-  gap: 0.75rem;
-  margin: 1rem 0 1.5rem;
-}
-
-.training-route-card {
-  min-width: 0;
-  border: 1px solid var(--training-border);
-  border-inline-start-width: 4px;
-  border-radius: 0.75rem;
-  background: var(--entry, transparent);
-  padding: 0.8rem 1rem;
-}
-
-.training-route-summary {
-  display: grid;
-  gap: 0.25rem;
-  cursor: pointer;
-}
-
-.training-route-title {
-  font-weight: 600;
-}
-
-.training-route-info,
-.training-route-unavailable {
-  color: var(--training-muted);
-  font-size: 0.85rem;
-}
-
-.training-route-map {
-  height: 18rem;
-  margin-top: 0.75rem;
-  border: 1px solid var(--training-border);
-  border-radius: 0.5rem;
-  background: color-mix(in srgb, var(--training-border) 25%, transparent);
-}
-
-.training-route-unavailable {
-  margin: 0.75rem 0 0;
 }
 
 .training-calendar-scroll {
@@ -309,10 +245,4 @@
   color: var(--phase-color);
   font-size: 0.8rem;
   font-weight: 500;
-}
-
-@media (max-width: 500px) {
-  .training-route-map {
-    height: 15rem;
-  }
 }

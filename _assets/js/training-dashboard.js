@@ -131,103 +131,21 @@
     return { wrapper, legend };
   };
 
-  const renderRouteMaps = (weeks) => {
-    const routes = make("div", "training-route-list");
-    const mapInstances = new Map();
-    let firstRoute = true;
-
-    weeks.forEach((week) => {
-      const colorClass = phaseClass(week.phase);
-      const card = make("article", `training-route-card ${colorClass}`);
-      const details = make("details", "training-route-details");
-      const summary = make("summary", "training-route-summary");
-      const title = make("span", "training-route-title", `Week ${week.week}`);
-      title.append(make("span", `training-phase ${colorClass}`, week.phase));
-      summary.append(title);
-
-      const run = week.longestRun;
-      const info = run
-        ? `${formatDate(run.date, { month: "short", day: "numeric" })} · ${run.distanceKm.toFixed(2)} km${run.paceSecondsPerKm ? ` · ${formatPace(run.paceSecondsPerKm)}` : ""}`
-        : week.coverage === "missing" ? "No FIT files for this week" : "No running activity found";
-      summary.append(make("span", "training-route-info", info));
-      details.append(summary);
-
-      if (run && run.points.length > 1) {
-        const map = make("div", "training-route-map");
-        map.id = `training-route-map-week-${week.week}`;
-        map.setAttribute("role", "region");
-        map.setAttribute("aria-label", `GPS route of the longest recorded run in week ${week.week}`);
-        details.append(map);
-        const initializeMap = () => {
-          if (!details.open || mapInstances.has(map.id)) return;
-          if (!window.L) {
-            map.textContent = "The map library could not be loaded. Please check your connection and reload.";
-            return;
-          }
-          const mapView = window.L.map(map, { scrollWheelZoom: false, preferCanvas: true });
-          mapView.setView(run.points[0], 13);
-          window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          }).addTo(mapView);
-          const routeColor = getComputedStyle(card).borderInlineStartColor;
-          const route = window.L.polyline(run.points, {
-            color: routeColor,
-            weight: 4,
-            opacity: 0.9,
-          }).addTo(mapView);
-          window.L.circleMarker(run.points[0], {
-            radius: 5,
-            color: "#fff",
-            weight: 2,
-            fillColor: "#29834b",
-            fillOpacity: 1,
-          }).addTo(mapView).bindTooltip("Start");
-          window.L.circleMarker(run.points[run.points.length - 1], {
-            radius: 5,
-            color: "#fff",
-            weight: 2,
-            fillColor: "#c43d35",
-            fillOpacity: 1,
-          }).addTo(mapView).bindTooltip("Finish");
-          mapView.fitBounds(route.getBounds(), { padding: [16, 16] });
-          mapInstances.set(map.id, mapView);
-        };
-        details.addEventListener("toggle", initializeMap);
-        if (firstRoute) {
-          firstRoute = false;
-          details.open = true;
-          window.requestAnimationFrame(initializeMap);
-        }
-      } else {
-        details.append(make("p", "training-route-unavailable",
-          run ? "This activity did not contain enough GPS points to draw a route." : "Route unavailable."
-        ));
-      }
-      card.append(details);
-      routes.append(card);
-    });
-    return routes;
-  };
-
   const render = (data) => {
     const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const recordedKm = data.weeks.reduce((total, week) => total + (week.actualKm || 0), 0);
     const longest = data.weeks.reduce((best, week) =>
       week.longestRun && (!best || week.longestRun.distanceKm > best.distanceKm) ? week.longestRun : best, null
     );
-    const routeWeeks = data.weeks.filter((week) => week.longestRun?.points?.length > 1).length;
-
     root.replaceChildren();
     root.append(
-      make("p", "training-note", "Weekly mileage and routes are calculated from the running FIT files. GPS routes are public and shown on OpenStreetMap; open a week to load its map.")
+      make("p", "training-note", "Weekly mileage is calculated from the running FIT files.")
     );
 
     const summary = make("div", "training-summary");
     [
       [`${recordedKm.toFixed(1)} km`, "recorded running distance"],
       [longest ? `${longest.distanceKm.toFixed(2)} km` : "—", "longest recorded run"],
-      [`${routeWeeks} of ${data.weeks.length}`, "weeks with a GPS route"],
       [formatDate(data.dataThrough, { month: "short", day: "numeric", year: "numeric" }), "latest FIT activity date"],
     ].forEach(([value, label]) => {
       const card = make("div", "training-summary-card");
@@ -241,12 +159,8 @@
     const mileageChart = renderMileageChart(data.weeks);
     root.append(mileageChart.wrapper, mileageChart.legend);
 
-    root.append(make("h2", "", "Longest run route by week"));
-    root.append(make("p", "training-note", "Each map shows the longest recorded run with a GPS track in that week. The first available map is shown by default; open another week to load its map. Start and finish are marked. No route data was supplied for weeks 20–23."));
-    root.append(renderRouteMaps(data.weeks));
-
     root.append(make("h2", "", "Activity calendar"));
-    root.append(make("p", "training-note", "Each cell totals the running activities recorded for that day. Pace is a whole-session average when available, including warm-up and recovery."));
+    root.append(make("p", "training-note", "Each cell totals the running activities recorded for that day. Hover over a cell for its activity title and details when available. Pace is a whole-session average when available, including warm-up and recovery."));
 
     const scroll = make("div", "training-calendar-scroll");
     const calendar = make("div", "training-calendar");
@@ -271,17 +185,26 @@
         cell.append(make("span", "training-day-distance",
           activity ? `${activity.km.toFixed(1)} km` : beyondCoverage ? "No data" : "—"
         ));
-        const details = activity
-          ? `${activity.sessions} running session${activity.sessions === 1 ? "" : "s"}${activity.paceSecondsPerKm ? ` · ${formatPace(activity.paceSecondsPerKm)}` : ""}`
+        const activityTitles = activity
+          ? (Array.isArray(activity.titles) ? activity.titles : [activity.title])
+            .filter((title) => typeof title === "string" && title.trim())
+          : [];
+        const activityDetails = activity
+          ? `${activity.km.toFixed(2)} km · ${activity.sessions} running session${activity.sessions === 1 ? "" : "s"}${activity.paceSecondsPerKm ? ` · ${formatPace(activity.paceSecondsPerKm)}` : ""}`
           : beyondCoverage ? "No FIT coverage for this date" : "No running activity recorded";
-        cell.title = `${formatDate(iso, { weekday: "long", month: "long", day: "numeric" })}: ${activity ? `${activity.km.toFixed(2)} km · ${details}` : details}`;
+        const tooltipLines = [
+          formatDate(iso, { weekday: "long", month: "long", day: "numeric" }),
+          ...activityTitles,
+          activityDetails,
+        ];
+        cell.title = tooltipLines.join("\n");
         calendar.append(cell);
       }
     });
     scroll.append(calendar);
     root.append(scroll);
 
-    root.append(make("p", "training-note", `GPS data is from the FIT files, simplified slightly for display, and displayed publicly. Maps use OpenStreetMap tiles. The supplied FIT data ends on ${formatDate(data.dataThrough, { month: "long", day: "numeric", year: "numeric" })}.`));
+    root.append(make("p", "training-note", `The supplied FIT data ends on ${formatDate(data.dataThrough, { month: "long", day: "numeric", year: "numeric" })}.`));
   };
 
   fetch(root.dataset.source)
