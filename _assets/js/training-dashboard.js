@@ -45,20 +45,17 @@
     const bottom = 342;
     const plotWidth = width - left - right;
     const plotHeight = bottom - top;
-    const maxDistance = Math.max(...weeks.map((week) =>
-      Math.max(week.plannedKm, week.actualKm || 0)
-    ));
+    const maxDistance = Math.max(...weeks.map((week) => week.actualKm || 0));
     const yMaximum = Math.ceil(maxDistance / 20) * 20;
     const slotWidth = plotWidth / weeks.length;
-    const barWidth = Math.min(13, slotWidth * 0.28);
-    const barGap = 3;
+    const barWidth = Math.min(21, slotWidth * 0.58);
     const chart = svgElement("svg", "training-chart");
     chart.setAttribute("viewBox", `0 0 ${width} ${height}`);
     chart.setAttribute("role", "img");
     chart.setAttribute("aria-labelledby", "training-chart-title training-chart-description");
     chart.append(
-      svgElement("title", "", "Weekly planned and recorded running mileage"),
-      svgElement("desc", "", "Grouped bars compare planned weekly kilometres with recorded running kilometres. Recorded bars use the color of each training phase. Missing FIT weeks have no recorded bar.")
+      svgElement("title", "", "Recorded weekly running mileage"),
+      svgElement("desc", "", "Bars show running kilometres from the supplied FIT files. Bar colors indicate each training phase; weeks without FIT data are left blank.")
     );
     chart.children[0].setAttribute("id", "training-chart-title");
     chart.children[1].setAttribute("id", "training-chart-description");
@@ -103,24 +100,17 @@
 
     weeks.forEach((week, index) => {
       const center = left + (index + 0.5) * slotWidth;
-      const entries = [
-        { value: week.plannedKm, className: "training-chart-planned", label: "planned" },
-        { value: week.actualKm, className: `training-chart-actual ${phaseClass(week.phase)}`, label: "recorded" },
-      ];
-
-      entries.forEach((entry, seriesIndex) => {
-        if (entry.value === null) return;
-        const barHeight = (entry.value / yMaximum) * plotHeight;
-        const x = center + (seriesIndex === 0 ? -barWidth - barGap / 2 : barGap / 2);
-        const bar = svgElement("rect", entry.className);
-        bar.setAttribute("x", `${x}`);
+      if (week.actualKm !== null) {
+        const barHeight = (week.actualKm / yMaximum) * plotHeight;
+        const bar = svgElement("rect", `training-chart-actual ${phaseClass(week.phase)}`);
+        bar.setAttribute("x", `${center - barWidth / 2}`);
         bar.setAttribute("y", `${bottom - barHeight}`);
         bar.setAttribute("width", `${barWidth}`);
         bar.setAttribute("height", `${barHeight}`);
-        bar.setAttribute("rx", "2");
-        addChartTitle(bar, `Week ${week.week}: ${entry.label} ${entry.value.toFixed(2)} kilometres`);
+        bar.setAttribute("rx", "3");
+        addChartTitle(bar, `Week ${week.week}: ${week.actualKm.toFixed(2)} recorded kilometres`);
         chart.append(bar);
-      });
+      }
 
       const weekLabel = svgElement("text", "training-chart-week", `W${week.week}`);
       weekLabel.setAttribute("x", `${center}`);
@@ -130,44 +120,107 @@
 
     const phases = [...new Set(weeks.map((week) => week.phase))];
     const legend = make("div", "training-phase-legend");
-    const seriesLegend = make("div", "training-series-legend");
-    [
-      ["Planned", "planned"],
-      ["Recorded running", "actual"],
-    ].forEach(([label, type]) => {
-      const item = make("span", "training-series-key");
-      item.append(make("span", `training-series-swatch ${type}`), document.createTextNode(label));
-      seriesLegend.append(item);
-    });
     const phaseLegend = make("div", "training-phase-keys");
     phases.forEach((phase) => {
       phaseLegend.append(make("span", `training-phase-key ${phaseClass(phase)}`, phase));
     });
-    legend.append(seriesLegend, phaseLegend);
+    legend.append(phaseLegend);
 
     const wrapper = make("div", "training-chart-scroll");
     wrapper.append(chart);
     return { wrapper, legend };
   };
 
+  const renderRouteMaps = (weeks) => {
+    const routes = make("div", "training-route-list");
+    const mapInstances = new Map();
+
+    weeks.forEach((week) => {
+      const colorClass = phaseClass(week.phase);
+      const card = make("article", `training-route-card ${colorClass}`);
+      const details = make("details", "training-route-details");
+      const summary = make("summary", "training-route-summary");
+      const title = make("span", "training-route-title", `Week ${week.week}`);
+      title.append(make("span", `training-phase ${colorClass}`, week.phase));
+      summary.append(title);
+
+      const run = week.longestRun;
+      const info = run
+        ? `${formatDate(run.date, { month: "short", day: "numeric" })} · ${run.distanceKm.toFixed(2)} km${run.paceSecondsPerKm ? ` · ${formatPace(run.paceSecondsPerKm)}` : ""}`
+        : week.coverage === "missing" ? "No FIT files for this week" : "No running activity found";
+      summary.append(make("span", "training-route-info", info));
+      details.append(summary);
+
+      if (run && run.points.length > 1) {
+        const map = make("div", "training-route-map");
+        map.id = `training-route-map-week-${week.week}`;
+        map.setAttribute("role", "region");
+        map.setAttribute("aria-label", `GPS route of the longest recorded run in week ${week.week}`);
+        details.append(map);
+        details.addEventListener("toggle", () => {
+          if (!details.open || mapInstances.has(map.id)) return;
+          if (!window.L) {
+            map.textContent = "The map library could not be loaded. Please check your connection and reload.";
+            return;
+          }
+          const mapView = window.L.map(map, { scrollWheelZoom: false, preferCanvas: true });
+          mapView.setView(run.points[0], 13);
+          window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+          }).addTo(mapView);
+          const routeColor = getComputedStyle(card).borderInlineStartColor;
+          const route = window.L.polyline(run.points, {
+            color: routeColor,
+            weight: 4,
+            opacity: 0.9,
+          }).addTo(mapView);
+          window.L.circleMarker(run.points[0], {
+            radius: 5,
+            color: "#fff",
+            weight: 2,
+            fillColor: "#29834b",
+            fillOpacity: 1,
+          }).addTo(mapView).bindTooltip("Start");
+          window.L.circleMarker(run.points[run.points.length - 1], {
+            radius: 5,
+            color: "#fff",
+            weight: 2,
+            fillColor: "#c43d35",
+            fillOpacity: 1,
+          }).addTo(mapView).bindTooltip("Finish");
+          mapView.fitBounds(route.getBounds(), { padding: [16, 16] });
+          mapInstances.set(map.id, mapView);
+        });
+      } else {
+        details.append(make("p", "training-route-unavailable",
+          run ? "This activity did not contain enough GPS points to draw a route." : "Route unavailable."
+        ));
+      }
+      card.append(details);
+      routes.append(card);
+    });
+    return routes;
+  };
+
   const render = (data) => {
     const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const maxKm = Math.max(...data.weeks.map((week) =>
-      Math.max(week.plannedKm, week.actualKm || 0)
-    ));
-    const coveredWeeks = data.weeks.filter((week) => week.coverage === "available").length;
-    const partialWeeks = data.weeks.filter((week) => week.coverage === "partial").length;
+    const recordedKm = data.weeks.reduce((total, week) => total + (week.actualKm || 0), 0);
+    const longest = data.weeks.reduce((best, week) =>
+      week.longestRun && (!best || week.longestRun.distanceKm > best.distanceKm) ? week.longestRun : best, null
+    );
+    const routeWeeks = data.weeks.filter((week) => week.longestRun?.points?.length > 1).length;
 
     root.replaceChildren();
     root.append(
-      make("p", "training-note", "Planned totals come from the training spreadsheet. Recorded totals use running sessions in the supplied FIT files; they are a useful comparison, not a perfect like-for-like measure.")
+      make("p", "training-note", "Weekly mileage and routes are calculated from the running FIT files. GPS routes are public and shown on OpenStreetMap; open a week to load its map.")
     );
 
     const summary = make("div", "training-summary");
     [
-      [`${data.plannedTotalKm.toLocaleString("en-US")} km`, "planned across 23 weeks"],
-      [`${data.peakPlannedWeek} km`, `peak planned week · w${data.weeks.find((week) => week.plannedKm === data.peakPlannedWeek).week}`],
-      [`${coveredWeeks} full + ${partialWeeks} partial`, "weeks with FIT coverage"],
+      [`${recordedKm.toFixed(1)} km`, "recorded running distance"],
+      [longest ? `${longest.distanceKm.toFixed(2)} km` : "—", "longest recorded run"],
+      [`${routeWeeks} of ${data.weeks.length}`, "weeks with a GPS route"],
       [formatDate(data.dataThrough, { month: "short", day: "numeric", year: "numeric" }), "latest FIT activity date"],
     ].forEach(([value, label]) => {
       const card = make("div", "training-summary-card");
@@ -177,46 +230,13 @@
     root.append(summary);
 
     root.append(make("h2", "", "Weekly mileage"));
-    root.append(make("p", "training-note", "Compare scheduled weekly kilometres with recorded running distance. Background bands and recorded bars use a distinct color for each training phase; missing FIT data is shown as unavailable, not as zero."));
+    root.append(make("p", "training-note", "Recorded running kilometres per week. Colors identify the training phase; weeks without FIT data are left blank."));
     const mileageChart = renderMileageChart(data.weeks);
     root.append(mileageChart.wrapper, mileageChart.legend);
 
-    const weeks = make("div", "training-weeks");
-    data.weeks.forEach((week) => {
-      const colorClass = phaseClass(week.phase);
-      const article = make("article", `training-week ${colorClass}`);
-      const heading = make("div", "training-week-heading");
-      const title = make("h3", "", `Week ${week.week}`);
-      title.append(make("span", `training-phase ${colorClass}`, week.phase));
-      heading.append(title, make("span", "training-status",
-        week.coverage === "available" ? "FIT data available" :
-          week.coverage === "partial" ? "Partial FIT coverage" : "No FIT data"
-      ));
-      article.append(heading);
-      article.append(make("p", "training-week-meta",
-        `${formatDate(week.start, { month: "short", day: "numeric" })}–${formatDate(week.end, { month: "short", day: "numeric" })}`
-      ));
-
-      const bars = make("div", "");
-      [
-        ["Planned", week.plannedKm, "planned"],
-        ["Recorded", week.actualKm, "actual"],
-      ].forEach(([label, value, type]) => {
-        const row = make("div", `training-bars${type === "actual" ? ` ${colorClass}` : ""}`);
-        row.append(make("span", "", label));
-        const track = make("div", `training-track training-track-${type}`);
-        track.setAttribute("role", "img");
-        track.setAttribute("aria-label", value === null ? `${label}: no FIT data` : `${label}: ${value.toFixed(2)} kilometres`);
-        const fill = make("span", "");
-        fill.style.width = value === null ? "0%" : `${Math.min(100, (value / maxKm) * 100)}%`;
-        track.append(fill);
-        row.append(track, make("strong", "", value === null ? "—" : `${value.toFixed(1)} km`));
-        bars.append(row);
-      });
-      article.append(bars);
-      weeks.append(article);
-    });
-    root.append(weeks);
+    root.append(make("h2", "", "Longest run route by week"));
+    root.append(make("p", "training-note", "Each map shows the longest running activity with a GPS track in that week. Start and finish are marked; maps load when opened. No route data was supplied for weeks 20–23."));
+    root.append(renderRouteMaps(data.weeks));
 
     root.append(make("h2", "", "Activity calendar"));
     root.append(make("p", "training-note", "Each cell totals the running activities recorded for that day. Pace is a whole-session average when available, including warm-up and recovery."));
@@ -254,7 +274,7 @@
     scroll.append(calendar);
     root.append(scroll);
 
-    root.append(make("p", "training-note", `Activity summaries only; GPS routes are not included. Supplied FIT data ends on ${formatDate(data.dataThrough, { month: "long", day: "numeric", year: "numeric" })}.`));
+    root.append(make("p", "training-note", `GPS data is from the FIT files, simplified slightly for display, and displayed publicly. Maps use OpenStreetMap tiles. The supplied FIT data ends on ${formatDate(data.dataThrough, { month: "long", day: "numeric", year: "numeric" })}.`));
   };
 
   fetch(root.dataset.source)
