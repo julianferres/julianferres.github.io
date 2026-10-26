@@ -1,0 +1,9 @@
+baseURL: https://julianferres.github.io/
+locale: en-US
+title: Running blog
+staticDir:
+  - _assets
+params:
+  author: Julian Ferres
+  description: Julian's running training and race notes.
+enableRobotsTXT: true
