@@ -1,0 +1,176 @@
+.training-dashboard {
+  --training-accent: #d96832;
+  --training-muted: var(--secondary, #777);
+  --training-border: var(--border, #ddd);
+  margin: 2rem 0;
+}
+
+.training-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.training-summary-card,
+.training-week {
+  border: 1px solid var(--training-border);
+  border-radius: 0.75rem;
+  background: var(--entry, transparent);
+}
+
+.training-summary-card {
+  padding: 1rem;
+}
+
+.training-summary-card strong,
+.training-summary-card span {
+  display: block;
+}
+
+.training-summary-card strong {
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.training-summary-card span,
+.training-note,
+.training-week-meta,
+.training-day-label {
+  color: var(--training-muted);
+  font-size: 0.875rem;
+}
+
+.training-weeks {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.training-week {
+  padding: 1rem;
+}
+
+.training-week-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+}
+
+.training-week-heading h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.training-week-meta {
+  margin: 0.2rem 0 0.75rem;
+}
+
+.training-status {
+  color: var(--training-muted);
+  font-size: 0.8rem;
+}
+
+.training-bars {
+  display: grid;
+  grid-template-columns: 4.25rem minmax(0, 1fr) 6.5rem;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.35rem 0;
+  font-size: 0.8rem;
+}
+
+.training-track {
+  height: 0.6rem;
+  overflow: hidden;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--training-border) 55%, transparent);
+}
+
+.training-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.training-track-planned span {
+  background: var(--training-muted);
+  opacity: 0.55;
+}
+
+.training-track-actual span {
+  background: var(--training-accent);
+}
+
+.training-calendar-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.training-calendar {
+  display: grid;
+  grid-template-columns: 3.5rem repeat(7, minmax(3.25rem, 1fr));
+  gap: 0.3rem;
+  min-width: 34rem;
+}
+
+.training-calendar-heading,
+.training-day,
+.training-calendar-week {
+  min-height: 3.6rem;
+  padding: 0.4rem;
+  border: 1px solid var(--training-border);
+  border-radius: 0.45rem;
+}
+
+.training-calendar-heading {
+  min-height: auto;
+  border: 0;
+  color: var(--training-muted);
+  text-align: center;
+  font-size: 0.75rem;
+}
+
+.training-calendar-week {
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.training-day {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--entry, transparent);
+  font-size: 0.75rem;
+}
+
+.training-day.has-activity {
+  border-color: color-mix(in srgb, var(--training-accent) 45%, var(--training-border));
+  background: color-mix(in srgb, var(--training-accent) 12%, var(--entry, transparent));
+}
+
+.training-day.no-data {
+  color: var(--training-muted);
+  opacity: 0.55;
+}
+
+.training-day-distance {
+  font-weight: 600;
+}
+
+.training-phase {
+  display: inline-block;
+  margin-left: 0.35rem;
+  color: var(--training-accent);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+@media (max-width: 500px) {
+  .training-bars {
+    grid-template-columns: 3.6rem minmax(0, 1fr) 5.5rem;
+  }
+}

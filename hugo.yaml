@@ -1,9 +1,37 @@
 baseURL: https://julianferres.github.io/
 locale: en-US
 title: Running blog
+enableRobotsTXT: true
+module:
+  imports:
+    - path: github.com/adityatelange/hugo-PaperMod
+menu:
+  main:
+    - identifier: posts
+      name: Posts
+      url: /posts/
+      weight: 10
+    - identifier: training
+      name: Training
+      url: /training/
+      weight: 15
+    - identifier: about
+      name: About
+      url: /about/
+      weight: 20
 staticDir:
   - _assets
 params:
   author: Julian Ferres
   description: Julian's running training and race notes.
-enableRobotsTXT: true
+  defaultTheme: auto
+  homeInfoParams:
+    Title: Running blog
+    Content: Training notes, race reports, and the miles in between.
+  mainSections:
+    - posts
+  ShowBreadCrumbs: true
+  ShowPostNavLinks: true
+  ShowReadingTime: true
+  ShowRssButtonInSectionTermList: true
+  ShowShareButtons: false
