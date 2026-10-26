@@ -134,6 +134,7 @@
   const renderRouteMaps = (weeks) => {
     const routes = make("div", "training-route-list");
     const mapInstances = new Map();
+    let firstRoute = true;
 
     weeks.forEach((week) => {
       const colorClass = phaseClass(week.phase);
@@ -157,7 +158,7 @@
         map.setAttribute("role", "region");
         map.setAttribute("aria-label", `GPS route of the longest recorded run in week ${week.week}`);
         details.append(map);
-        details.addEventListener("toggle", () => {
+        const initializeMap = () => {
           if (!details.open || mapInstances.has(map.id)) return;
           if (!window.L) {
             map.textContent = "The map library could not be loaded. Please check your connection and reload.";
@@ -191,7 +192,13 @@
           }).addTo(mapView).bindTooltip("Finish");
           mapView.fitBounds(route.getBounds(), { padding: [16, 16] });
           mapInstances.set(map.id, mapView);
-        });
+        };
+        details.addEventListener("toggle", initializeMap);
+        if (firstRoute) {
+          firstRoute = false;
+          details.open = true;
+          window.requestAnimationFrame(initializeMap);
+        }
       } else {
         details.append(make("p", "training-route-unavailable",
           run ? "This activity did not contain enough GPS points to draw a route." : "Route unavailable."
@@ -235,7 +242,7 @@
     root.append(mileageChart.wrapper, mileageChart.legend);
 
     root.append(make("h2", "", "Longest run route by week"));
-    root.append(make("p", "training-note", "Each map shows the longest running activity with a GPS track in that week. Start and finish are marked; maps load when opened. No route data was supplied for weeks 20–23."));
+    root.append(make("p", "training-note", "Each map shows the longest recorded run with a GPS track in that week. The first available map is shown by default; open another week to load its map. Start and finish are marked. No route data was supplied for weeks 20–23."));
     root.append(renderRouteMaps(data.weeks));
 
     root.append(make("h2", "", "Activity calendar"));
